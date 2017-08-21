@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.4"?>
+<plugin>
+
+   <extension
+         point="org.eclipse.ui.commands">
+      <command
+            name="Create file"
+            id="com.dorin.fileCreator.commands.createFile">
+      </command>
+   </extension>
+   <extension
+         point="org.eclipse.ui.handlers">
+      <handler
+            commandId="com.dorin.fileCreator.commands.createFile"
+            class="com.dorin.filecreator.handlers.CreateFileHandler">
+      </handler>
+   </extension>
+   <extension
+         point="org.eclipse.ui.bindings">
+      <key
+            commandId="com.dorin.fileCreator.commands.createFile"
+            contextId="org.eclipse.ui.contexts.window"
+            sequence="M1+6"
+            schemeId="org.eclipse.ui.defaultAcceleratorConfiguration">
+      </key>
+   </extension>
+   <extension
+         point="org.eclipse.ui.menus">
+      <menuContribution
+            locationURI="menu:org.eclipse.ui.main.menu?after=additions">
+         <menu
+               label="New file"
+               mnemonic="M"
+               id="com.dorin.fileCreator.menus.newFile">
+            <command
+                  commandId="com.dorin.fileCreator.commands.createFile"
+                  mnemonic="S"
+                  id="com.dorin.fileCreator.menus.createFile">
+            </command>
+         </menu>
+      </menuContribution>
+      <menuContribution
+            locationURI="toolbar:org.eclipse.ui.main.toolbar?after=additions">
+         <toolbar
+               id="com.dorin.fileCreator.toolbars.sampleToolbar">
+            <command
+                  commandId="com.dorin.fileCreator.commands.createFile"
+                  icon="icons/fileIcon_16x16.png"
+                  id="com.dorin.fileCreator.toolbars.createFile">
+            </command>
+         </toolbar>
+      </menuContribution>
+   </extension>
+
+</plugin>
