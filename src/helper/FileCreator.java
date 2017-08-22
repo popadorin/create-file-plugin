@@ -12,16 +12,19 @@ public class FileCreator {
 		
 		byte data[] = fileInfo.getContent().getBytes();
 		String location = fileInfo.getFileLocation() + "\\" +
-				fileInfo.getName() +
-				fileInfo.getExtension();
+				fileInfo.getName();
 		
 		Path filePath = Paths.get(location);
-		try {
-			Files.write(filePath, data);
-		} catch (Exception e) {
-			Files.createFile(filePath);
-			Files.write(filePath, data);
+
+		if (!Files.isDirectory(filePath.getParent())) {
+			Files.createDirectories(filePath.getParent());
 		}
+		
+		if (!Files.isRegularFile(filePath)) {
+			Files.createFile(filePath);
+		}
+		
+		Files.write(filePath, data);
 		
 	}
 }

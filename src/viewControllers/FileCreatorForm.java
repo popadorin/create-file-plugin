@@ -2,11 +2,11 @@ package viewControllers;
 
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.events.MouseAdapter;
-import org.eclipse.swt.events.MouseEvent;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
+import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.graphics.Point;
+import org.eclipse.swt.graphics.Rectangle;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Dialog;
@@ -15,18 +15,20 @@ import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
+import org.eclipse.ui.PlatformUI;
 
 import helper.FileCreator;
 import models.FileInfo;
 import org.eclipse.swt.events.ModifyListener;
 import org.eclipse.swt.events.ModifyEvent;
+import swing2swt.layout.BorderLayout;
 
 public class FileCreatorForm extends Dialog {
 
 	protected Object result;
 	protected Shell shell;
+	protected Display display;
 	private Text textName;
-	private Text textExtension;
 	private Text textLocation;
 	private Text textContent;
 	private DirectoryDialog dialogFileLocator;
@@ -43,7 +45,7 @@ public class FileCreatorForm extends Dialog {
 	
 	public FileCreatorForm(Shell parent, int style) {
 		super(parent, style);
-		setText("SWT Dialog");
+		setText("Create file");
 		
 	}
 
@@ -55,7 +57,7 @@ public class FileCreatorForm extends Dialog {
 		createContents();
 		shell.open();
 		shell.layout();
-		Display display = getParent().getDisplay();
+		display = getParent().getDisplay();
 		while (!shell.isDisposed()) {
 			if (!display.readAndDispatch()) {
 				display.sleep();
@@ -69,43 +71,36 @@ public class FileCreatorForm extends Dialog {
 	 * Create contents of the dialog.
 	 */
 	private void createContents() {
-		shell = new Shell(getParent(), SWT.DIALOG_TRIM);
+		shell = new Shell(getParent(), SWT.DIALOG_TRIM | SWT.RESIZE);
+		
 		shell.setMinimumSize(new Point(500, 250));
-		shell.setSize(500, 52);
+		shell.setSize(335, 121);
+		shell.setImage(new Image(display, "c:/Users/marc.graciov/workspace/com.dorin.fileCreator/icons/fileIcon.ico"));
 		shell.setText(getText());
+		shell = getScreenCenteredShell();
+		shell.setLayout(new BorderLayout(0, 0));
 		
-		Composite compositeName = new Composite(shell, SWT.NONE);
-		compositeName.setBounds(10, 10, 243, 36);
+		Composite compositeLeft = new Composite(shell, SWT.NONE);
+		compositeLeft.setLayoutData(BorderLayout.WEST);
 		
-		Label lblFileName = new Label(compositeName, SWT.NONE);
-		lblFileName.setBounds(10, 10, 38, 15);
-		lblFileName.setText("name");
+		Composite compositeCreateFile = new Composite(compositeLeft, SWT.NONE);
+		compositeCreateFile.setBounds(0, 118, 243, 84);
 		
-		textName = new Text(compositeName, SWT.BORDER);
-		textName.addModifyListener(new ModifyListener() {
-			public void modifyText(ModifyEvent e) {
-				lblStatusMessage.setText("");
+		Button btnCreateFile = new Button(compositeCreateFile, SWT.NONE);
+		btnCreateFile.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				createFile();
 			}
 		});
-		textName.setBounds(75, 7, 131, 21);
+		btnCreateFile.setBounds(10, 24, 75, 25);
+		btnCreateFile.setText("Create file");
 		
-		Composite compositeExtension = new Composite(shell, SWT.NONE);
-		compositeExtension.setBounds(10, 52, 243, 36);
+		lblStatusMessage = new Label(compositeCreateFile, SWT.NONE);
+		lblStatusMessage.setBounds(91, 24, 142, 22);
 		
-		Label lblFileExtension = new Label(compositeExtension, SWT.NONE);
-		lblFileExtension.setText("extension");
-		lblFileExtension.setBounds(10, 10, 50, 15);
-		
-		textExtension = new Text(compositeExtension, SWT.BORDER);
-		textExtension.addModifyListener(new ModifyListener() {
-			public void modifyText(ModifyEvent e) {
-				lblStatusMessage.setText("");
-			}
-		});
-		textExtension.setBounds(75, 7, 130, 21);
-		
-		Composite compositeLocation = new Composite(shell, SWT.NONE);
-		compositeLocation.setBounds(10, 100, 243, 70);
+		Composite compositeLocation = new Composite(compositeLeft, SWT.NONE);
+		compositeLocation.setBounds(0, 0, 243, 70);
 		
 		Label lblFileLocation = new Label(compositeLocation, SWT.NONE);
 		lblFileLocation.setText("file location:");
@@ -127,51 +122,37 @@ public class FileCreatorForm extends Dialog {
 				lblStatusMessage.setText("");
 			}
 		});
-		textLocation.addMouseListener(new MouseAdapter() {
-			@Override
-			public void mouseUp(MouseEvent e) {
-				getLocationSelector();
-			}
-		});
 		textLocation.setBounds(10, 32, 223, 38);
 		
-		Composite compositeContent = new Composite(shell, SWT.NONE);
-		compositeContent.setBounds(259, 10, 224, 150);
+		Composite compositeName = new Composite(compositeLeft, SWT.NONE);
+		compositeName.setBounds(0, 76, 243, 36);
 		
-		textContent = new Text(compositeContent, SWT.BORDER | SWT.WRAP | SWT.V_SCROLL);
+		Label lblFileName = new Label(compositeName, SWT.NONE);
+		lblFileName.setBounds(10, 10, 38, 15);
+		lblFileName.setText("name");
+		
+		textName = new Text(compositeName, SWT.BORDER);
+		textName.addModifyListener(new ModifyListener() {
+			public void modifyText(ModifyEvent e) {
+				lblStatusMessage.setText("");
+			}
+		});
+		textName.setBounds(54, 7, 179, 21);
+		
+		Composite compositeRightContent = new Composite(shell, SWT.NONE);
+		compositeRightContent.setLayout(new BorderLayout(0, 0));
+		
+		Label lblFileContent = new Label(compositeRightContent, SWT.NONE);
+		lblFileContent.setLayoutData(BorderLayout.NORTH);
+		lblFileContent.setText("content:");
+		
+		textContent = new Text(compositeRightContent, SWT.BORDER | SWT.WRAP | SWT.V_SCROLL);
+		textContent.setLayoutData(BorderLayout.CENTER);
 		textContent.addModifyListener(new ModifyListener() {
 			public void modifyText(ModifyEvent e) {
 				lblStatusMessage.setText("");
 			}
 		});
-		textContent.setBounds(10, 40, 204, 100);
-		
-		Label lblFileContent = new Label(compositeContent, SWT.NONE);
-		lblFileContent.setBounds(10, 10, 86, 15);
-		lblFileContent.setText("content:");
-		
-		Composite compositeCreateFile = new Composite(shell, SWT.NONE);
-		compositeCreateFile.setBounds(10, 176, 243, 46);
-		
-		Button btnCreateFile = new Button(compositeCreateFile, SWT.NONE);
-		btnCreateFile.addSelectionListener(new SelectionAdapter() {
-			@Override
-			public void widgetSelected(SelectionEvent e) {
-				createFile();
-			}
-		});
-		btnCreateFile.setBounds(74, 10, 75, 25);
-		btnCreateFile.setText("Create file");
-		
-		Composite compositeStatus = new Composite(shell, SWT.NONE);
-		compositeStatus.setBounds(269, 166, 214, 56);
-		
-		Label lblStatus = new Label(compositeStatus, SWT.NONE);
-		lblStatus.setBounds(10, 10, 55, 15);
-		lblStatus.setText("Status:");
-		
-		lblStatusMessage = new Label(compositeStatus, SWT.NONE);
-		lblStatusMessage.setBounds(10, 31, 194, 15);
 		
 	}
 	
@@ -193,7 +174,6 @@ public class FileCreatorForm extends Dialog {
 	private void createFile() {
 		FileInfo fileInfo = new FileInfo(
 				textName.getText(), 
-				textExtension.getText(),
 				textContent.getText(),
 				textLocation.getText()
 		);
@@ -207,5 +187,16 @@ public class FileCreatorForm extends Dialog {
 			String errorMessage = "Error class: " + ex.getClass() + "\n\n Error message: " + ex.getMessage();
 			MessageDialog.openError(shell, "Failed to create file", errorMessage);
 		}
+	}
+	
+	public Shell getScreenCenteredShell() {
+		Display display = PlatformUI.getWorkbench().getDisplay();
+		Rectangle shellBounds = shell.getBounds();
+		Rectangle screen = display.getMonitors()[0].getBounds();
+		int x = (screen.width-shellBounds.width)/2;
+		int y = (screen.height-shellBounds.height)/2;
+		shell.setBounds(x, y, shellBounds.width, shellBounds.height);
+		
+		return shell;
 	}
 }
