@@ -75,7 +75,7 @@ public class FileCreatorForm extends Dialog {
 		
 		shell.setMinimumSize(new Point(500, 250));
 		shell.setSize(335, 121);
-		shell.setImage(new Image(display, "c:/Users/marc.graciov/workspace/com.dorin.fileCreator/icons/fileIcon.ico"));
+		shell.setImage(new Image(display, "c:/Users/marc.graciov/workspace/create-file-plugin/icons/fileIcon.ico"));
 		shell.setText(getText());
 		shell = getScreenCenteredShell();
 		shell.setLayout(new BorderLayout(0, 0));

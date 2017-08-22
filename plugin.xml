@@ -13,7 +13,7 @@
          point="org.eclipse.ui.handlers">
       <handler
             commandId="com.dorin.fileCreator.commands.createFile"
-            class="com.dorin.filecreator.handlers.CreateFileHandler">
+            class="plugin.handlers.CreateFileHandler">
       </handler>
    </extension>
    <extension

@@ -1,4 +1,4 @@
-package com.dorin.filecreator.handlers;
+package plugin.handlers;
 
 import org.eclipse.core.commands.AbstractHandler;
 import org.eclipse.core.commands.ExecutionEvent;
